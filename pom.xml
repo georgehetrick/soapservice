@@ -97,7 +97,22 @@
             <version>${jaxws.version}</version>
             <executions>
                 <execution>
+                    <id>wsgen</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>wsgen</goal>
+                    </goals>
+                    <configuration>
+                        <sei>${soapPackage}.HelloServiceImpl</sei>
+                        <genWsdl>true</genWsdl>
+                        <keep>true</keep>
+                        <resourceDestDir>${destDir}/src/main/webapp/WEB-INF/wsdl</resourceDestDir>
+                        <sourceDestDir>${destDir}/src/main/java</sourceDestDir>
+                    </configuration>
+                </execution>
+                <execution>
                     <id>wsimport</id>
+                    <phase>process-classes</phase>
                     <goals>
                         <goal>wsimport</goal>
                     </goals>
@@ -108,21 +123,7 @@
                         <sourceDestDir>${destDir}/src/main/java</sourceDestDir>
                     </configuration>
                 </execution>
-                <execution>
-                    <id>process-classes</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>wsgen</goal>
-                    </goals>
-                </execution>
             </executions>
-            <configuration>
-                <sei>${soapPackage}.HelloServiceImpl</sei>
-                <genWsdl>true</genWsdl>
-                <keep>true</keep>
-                <resourceDestDir>${destDir}/src/main/webapp/WEB-INF/wsdl</resourceDestDir>
-                <sourceDestDir>${destDir}/src/main/java</sourceDestDir>
-            </configuration>
         </plugin>
         <plugin>
             <groupId>org.codehaus.mojo</groupId>
