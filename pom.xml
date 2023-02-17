@@ -19,6 +19,9 @@
     <maven.compiler.target>11</maven.compiler.target>
     <jdk.version>11</jdk.version>
     <jaxws.version>4.0.1</jaxws.version>
+    <jetty.port>8999</jetty.port>
+    <destDir>${basedir}/target/generated</destDir>
+    <soapPackage>com.georgehetrick.soapservice</soapPackage>
   </properties>
 
   <dependencies>
@@ -82,18 +85,31 @@
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-          	<version>3.8.0</version>
+              <version>3.8.0</version>
             <configuration>
                 <source>${jdk.version}</source>
                 <target>${jdk.version}</target>
             </configuration>
         </plugin>
         <plugin>
-	        <groupId>com.sun.xml.ws</groupId>
-	        <artifactId>jaxws-maven-plugin</artifactId>
-	        <version>${jaxws.version}</version>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-maven-plugin</artifactId>
+            <version>${jaxws.version}</version>
             <executions>
                 <execution>
+                    <id>wsimport</id>
+                    <goals>
+                        <goal>wsimport</goal>
+                    </goals>
+                    <configuration>
+                        <wsdlDirectory>${destDir}/src/main/webapp/WEB-INF/wsdl</wsdlDirectory>
+                        <keep>true</keep>
+                        <packageName>${soapPackage}.client</packageName>
+                        <sourceDestDir>${destDir}/src/main/java</sourceDestDir>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>process-classes</id>
                     <phase>process-classes</phase>
                     <goals>
                         <goal>wsgen</goal>
@@ -101,12 +117,31 @@
                 </execution>
             </executions>
             <configuration>
-                <sei>com.georgehetrick.soapservice.HelloServiceImpl</sei>
+                <sei>${soapPackage}.HelloServiceImpl</sei>
                 <genWsdl>true</genWsdl>
                 <keep>true</keep>
-                <resourceDestDir>${basedir}/target/generated/src/main/webapp/WEB-INF/wsdl</resourceDestDir>
-                <sourceDestDir>${basedir}/target/generated/src/main/java</sourceDestDir>
+                <resourceDestDir>${destDir}/src/main/webapp/WEB-INF/wsdl</resourceDestDir>
+                <sourceDestDir>${destDir}/src/main/java</sourceDestDir>
             </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+                <execution>
+                    <id>add-source</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>add-source</goal>
+                    </goals>
+                    <configuration>
+                        <sources>
+                            <source>${destDir}/src/main/java</source>
+                        </sources>
+                    </configuration>
+                </execution>
+            </executions>
         </plugin>
         <plugin>
             <groupId>org.eclipse.jetty</groupId>
@@ -114,7 +149,7 @@
             <version>11.0.13</version>
             <configuration>
                 <httpConnector>
-                    <port>8999</port>
+                    <port>${jetty.port}</port>
                 </httpConnector>
                 <stopKey>quit</stopKey>
                 <stopPort>9000</stopPort>
@@ -136,6 +171,6 @@
                 </execution>
             </executions>
         </plugin>
-	  </plugins>
+      </plugins>
   </build>
 </project>
