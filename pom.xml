@@ -105,9 +105,8 @@
                     <configuration>
                         <sei>${soapPackage}.HelloServiceImpl</sei>
                         <genWsdl>true</genWsdl>
-                        <keep>true</keep>
+                        <keep>false</keep>
                         <resourceDestDir>${destDir}/src/main/webapp/WEB-INF/wsdl</resourceDestDir>
-                        <sourceDestDir>${destDir}/src/main/java</sourceDestDir>
                     </configuration>
                 </execution>
                 <execution>
