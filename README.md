@@ -1,7 +1,7 @@
 # SoapService
 
 This is a simple HelloWorld application written as a soap service
-It connsists of
+It consists of
 1. A java @WebService file
 2. a pom file with
    - wsgen    -- to create a wsdl file
